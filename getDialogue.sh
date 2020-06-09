@@ -5,11 +5,7 @@ function main() {
     }
     local save
     save='dialogue_all.csv'
-    if [ -f "${save}" ]; then
-        rm "${save}"
-    else
-        touch "${save}"
-    fi
+    echo 'Filename,Description,Dialogue,Place,Category,Date' > "${save}"
     for file in dialogue_page/*
     do
         echo "Now: ${file}"
