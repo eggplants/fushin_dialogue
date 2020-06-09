@@ -17,9 +17,18 @@ function main() {
                 s/\t//g' "${file}"     | tr -d \\n |
         grep -oP '(?<=>)[^<]+(?=<)' | sed \$\ d | grep -v '該当する不審者情報は未登録です' |
         ruby -e'
-        f = []
-        `dd`.split(?\n).each{if scan(/「|\//)}
-        ' > "${save}"
+        n = $*[0]
+        f = ["", "", ""]
+        `dd`.split(?\n).each{
+            f[0] = _1 unless _1 =~ /[\/「」]/
+            f[1] = _1 if _1 =~ /[「」]/
+            f[2] = _1.split.join(?,) if _1 =~ /\d{4}\/\d{2}\/\d{2}/
+            unless f[2].empty?
+                puts n + ?, + f.join(?,)
+                f = ["", "", ""]
+            end
+        }
+        ' "$(basename ${file})" >> "${save}"
     done
 }
 main
