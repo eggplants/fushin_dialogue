@@ -2,8 +2,8 @@
 
 function main() {
     local url d_name
-    url='https://fushinsha-joho.co.jp/serif.cgi'
-    d_name='serif_page'
+    url='https://fushinsha-joho.co.jp/dialogue.cgi'
+    d_name='dialogue_page'
 
     mkdir -p "${d_name}"
     echo "Now: ${d_name}"
