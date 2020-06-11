@@ -5,7 +5,7 @@ function main() {
     }
     local save
     save='dialogue_all.csv'
-    echo 'Filename,Description,Dialogue,Place,Category,Date' > "${save}"
+    echo 'Date,Category,Description,Dialogue,Place' > "${save}"
     for file in dialogue_page/*
     do
         echo "Now: ${file}"
@@ -14,14 +14,17 @@ function main() {
         grep -oP '(?<=>)[^<]+(?=<)' | sed \$\ d | grep -v '該当する不審者情報は未登録です' |
         ruby -e'
         n = $*[0]
-        f = ["", "", ""]
+        f = ["", "", []]
         `dd`.split(?\n).each{
+            # description
             f[0] = _1 unless _1 =~ /[\/「」]/
+            # dialogue
             f[1] = _1 if _1 =~ /[「」]/
-            f[2] = _1.split.join(?,) if _1 =~ /\d{4}\/\d{2}\/\d{2}/
+            # place, category, date
+            f[2] = _1.split if _1 =~ /\d{4}\/\d{2}\/\d{2}/
             unless f[2].empty?
-                puts n + ?, + f.join(?,)
-                f = ["", "", ""]
+                puts [f[2][2], f[2][1], f[1], f[0], f[2][0]].join(?,)
+                f = ["", "", []]
             end
         }
         ' "$(basename ${file})" >> "${save}"
